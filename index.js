@@ -46,22 +46,24 @@ class Sprite {
     }
 
     update() {
-        this.draw()
-        this.attackBox.position.x = this.position.x + this.attackBox.offset.x,
-            this.attackBox.position.y = this.position.y
+        this.draw();
+        this.attackBox.position.x = this.position.x + this.attackBox.offset.x;
+        this.attackBox.position.y = this.position.y;
 
         this.position.y += this.velocity.y;
         this.position.x += this.velocity.x;
 
         if (this.position.y + this.height + this.velocity.y >= canvas.height) {
-            this.velocity.y = 0
-        } else  this.velocity.y += gravity;
+            this.velocity.y = 0;
+        } else {
+            this.velocity.y += gravity;
+        }
     }
-    attack(){
-        this.isAttacking = true
-        setTimeout(()=>{
-            this.isAttacking = false
-        },100)
+    attack() {
+        this.isAttacking = true;
+        setTimeout(() => {
+            this.isAttacking = false;
+        }, 100);
     }
 }
 
@@ -121,16 +123,16 @@ const keys ={
 }
 
 
-function rectCollision({rectangle1, rectangle2}) {
-    return(
-        rectangle1.attackBox.position.x + rectangle1.width >= rectangle2.position.x &&
+function rectCollision({ rectangle1, rectangle2 }) {
+    return (
+        rectangle1.attackBox.position.x + rectangle1.attackBox.width >= rectangle2.position.x &&
         rectangle1.attackBox.position.x <= rectangle2.position.x + rectangle2.width &&
         rectangle1.attackBox.position.y + rectangle1.attackBox.height >= rectangle2.position.y &&
         rectangle1.attackBox.position.y <= rectangle2.position.y + rectangle2.height
-    )
+    );
 }
 
-function animate(){
+function animate() {
     window.requestAnimationFrame(animate);
     c.fillStyle = 'black';
     c.fillRect(0, 0, canvas.width, canvas.height);
@@ -138,44 +140,47 @@ function animate(){
     player.update();
     enemy.update();
 
-    player.velocity.x = 0
-    enemy.velocity.x = 0
+    player.velocity.x = 0;
+    enemy.velocity.x = 0;
 
-    //Player Movement
+    // Player Movement
     if (keys.a.pressed && player.lastKey === 'a') {
-        player.velocity.x =-5
-    }else if (keys.d.pressed && player.lastKey === 'd') {
-        player.velocity.x = 5
+        player.velocity.x = -5;
+    } else if (keys.d.pressed && player.lastKey === 'd') {
+        player.velocity.x = 5;
     }
-//Enemy Movement
+    // Enemy Movement
     if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
-        enemy.velocity.x =-5
-    }else if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
-        enemy.velocity.x =5
+        enemy.velocity.x = -5;
+    } else if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
+        enemy.velocity.x = 5;
     }
-    //detect for collision
-    if(
+
+    // detect for collision
+    if (
         rectCollision({
             rectangle1: player,
             rectangle2: enemy
-        })&&
+        }) &&
         player.isAttacking
-    ){
-        player.isAttacking = false
-        console.log('go')
+    ) {
+        player.isAttacking = false;
+        console.log('Player hit the enemy');
     }
-    if(
+
+    if (
         rectCollision({
             rectangle1: enemy,
             rectangle2: player
-        })&&
+        }) &&
         enemy.isAttacking
-    ){
-        player.isAttacking = false
-        console.log('enemy is atacking')
+    ) {
+        enemy.isAttacking = false;
+        console.log('Enemy hit the player');
     }
 }
 animate();
+
 
 window.addEventListener('keydown', (event)=> {
 
@@ -196,19 +201,19 @@ window.addEventListener('keydown', (event)=> {
             break
         //enemy controll
         case 'ArrowRight':
-            keys.ArrowRight.pressed = true
-            enemy.lastKey = 'ArrowRight'
-            break
+            keys.ArrowRight.pressed = true;
+            enemy.lastKey = 'ArrowRight';
+            break;
         case 'ArrowLeft':
-            keys.ArrowLeft.pressed = true
-            enemy.lastKey = 'ArrowLeft'
-            break
+            keys.ArrowLeft.pressed = true;
+            enemy.lastKey = 'ArrowLeft';
+            break;
         case 'ArrowUp':
-            enemy.velocity.y = -15
-            break
+            enemy.velocity.y = -15;
+            break;
         case 'ArrowDown':
-            enemy.isAttacking = true
-            break
+            enemy.attack();
+            break;
     }
 
 
